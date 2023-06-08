@@ -1,6 +1,6 @@
 .session-container {
     display:grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    /* grid-template-columns: 1fr 1fr 1fr; */
     grid-template-rows: 1fr 1fr;
 }
 
@@ -12,6 +12,15 @@
 
 .session-container .title {
     font-size:1.5rem;
-    grid-column: 1/4;
+    /* grid-column: 1/4; */
+}
+
+.keeper-controls {
+    grid-row:2/3;
+    gap:10px;
+}
+
+.test {
+    cursor:pointer;
 }
 

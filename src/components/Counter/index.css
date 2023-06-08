@@ -7,17 +7,38 @@
 }
 
 .counter {
-    height:70%;
+    height:100%;
     width: 50%;
     border:4px solid #F9DBBB;
     border-radius:20px;
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size:2rem;
+    gap:10px;
 }
 
 .controls {
     display:flex;
     justify-content: center;
     align-items: center;
-    border:1px solid white;
     height:30%;
     width:50%;
+}
+
+.controls button {
+    cursor:pointer;
+}
+
+.pause {
+    background: #E9D502;
+}
+
+.play {
+    background: yellowgreen;
+}
+
+.reset {
+    background: red;
 }

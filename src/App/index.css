@@ -14,16 +14,11 @@ body {
 }
 
 main {
-    border:1px solid white; 
     height:400px;
     width:600px;
     display:grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr 1fr 2fr;
-}
-
-main div {
-    border:1px solid white;
 }
 
 main .one {
