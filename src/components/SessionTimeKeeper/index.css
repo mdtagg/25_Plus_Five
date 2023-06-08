@@ -1,0 +1,17 @@
+.session-container {
+    display:grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+}
+
+.session-container div {
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.session-container .title {
+    font-size:1.5rem;
+    grid-column: 1/4;
+}
+
