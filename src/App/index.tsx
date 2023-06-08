@@ -1,6 +1,6 @@
 import './index.css'
-
 import SessionTimeKeeper from '../components/SessionTimeKeeper'
+import Counter from '../components/Counter'
 
 function App() {
 
@@ -12,9 +12,9 @@ function App() {
         </div>
         <SessionTimeKeeper/>
         <SessionTimeKeeper/>
-        <div>
-
-        </div>
+        {/* <div className="counter-container"> */}
+          <Counter/>
+        {/* </div> */}
       </main>
     </>
   )

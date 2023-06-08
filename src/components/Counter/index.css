@@ -1,0 +1,23 @@
+.counter-container {
+    grid-column: 1/3;
+    display: flex;
+    flex-direction:column;
+    /* justify-content: center; */
+    align-items: center;
+}
+
+.counter {
+    height:70%;
+    width: 50%;
+    border:4px solid #F9DBBB;
+    border-radius:20px;
+}
+
+.controls {
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    border:1px solid white;
+    height:30%;
+    width:50%;
+}
