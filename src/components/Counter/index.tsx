@@ -13,26 +13,25 @@ const Counter = (props:CounterProps) => {
 
     const { breakTime, sessionTime, executing, setExecuting } = props
     const [ minutes, setMinutes ] = useState(sessionTime)
-    const [ seconds, setSeconds ] = useState(0)
-    const [ timer, setTimer] = useState(`${minutes}:${seconds}`)
-
-    const Session = "Session"
-    const Break = "Break"
+    const [ seconds, setSeconds ] = useState<string | number>(`00`)
+    const [ timer, setTimer] = useState(`${sessionTime}:00`)
 
     const handleClick = () => {
-        const timeArray = timer.split(':').map(time => {
-            return parseInt(time)
-        })
-        const [minutes, seconds] = timeArray
-        setSeconds(seconds)
-        setMinutes(minutes)
+        // const timeArray = timer.split(':').map(time => {
+        //     return parseInt(time)
+        // })
+        // const [minutes, seconds] = timeArray
+        const intSeconds = parseInt(seconds as string) 
+        // setMinutes(minutes)
+        setSeconds(intSeconds)
         setExecuting('session')
+        console.log("handle Click")
     }
 
     useEffect(() => {
         if(executing === '') return
         if(seconds === 0 && minutes === 0) {
-            console.log("both zeros")
+            console.log("both equal zero")
             if(executing === 'session') {
                 setExecuting('break')
                 setTimer(`${breakTime}:00`)
@@ -40,24 +39,42 @@ const Counter = (props:CounterProps) => {
                 setExecuting('session')
                 setTimer(`${sessionTime}:00`)
             }
-        }else if(seconds > 0) {
-            console.log("seconds greater than 0")
+        }else if(seconds as number > 0) {
+            console.log("seconds greater",seconds)
             setTimeout(() => {
                 setSeconds((prev) => {
-                    return prev -= 1
+                    let test = prev as number
+                    return test -= 1 
                 })
             },1000)
         }else if(seconds === 0 && minutes !== 0) {
-            console.log("seconds equal to zero")
+            console.log("seconds zero")
             setTimeout(() => {
                 setMinutes((prev) => {
                     return prev -= 1
                 })
                 setSeconds(59)
             },1000)
-            
+        }
+    },[timer,executing])
+
+    useEffect(() => {
+        setMinutes(sessionTime)
+    },[sessionTime])
+
+    useEffect(() => {
+        if(executing === '') {
+            setTimer(`${minutes}:${seconds}`)
+        }
+        else if(seconds as number >= 10 && executing !== '') {
+            setTimer(`${minutes}:${seconds}`)
+        }
+        else if(seconds as number < 10 && executing !== '') {
+            setTimer(`${minutes}:0${seconds}`)
         }
     },[seconds,minutes])
+
+    
 
     return (
         <div className="counter-container">
