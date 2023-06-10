@@ -12,43 +12,40 @@ interface CounterProps {
 const Counter = (props:CounterProps) => {
 
     const { breakTime, sessionTime, executing, setExecuting } = props
+
     const [ minutes, setMinutes ] = useState(sessionTime)
     const [ seconds, setSeconds ] = useState<string | number>(`00`)
     const [ timer, setTimer] = useState(`${sessionTime}:00`)
 
     const handleClick = () => {
-        // const timeArray = timer.split(':').map(time => {
-        //     return parseInt(time)
-        // })
-        // const [minutes, seconds] = timeArray
         const intSeconds = parseInt(seconds as string) 
-        // setMinutes(minutes)
         setSeconds(intSeconds)
         setExecuting('session')
-        console.log("handle Click")
     }
 
     useEffect(() => {
         if(executing === '') return
         if(seconds === 0 && minutes === 0) {
-            console.log("both equal zero")
             if(executing === 'session') {
                 setExecuting('break')
-                setTimer(`${breakTime}:00`)
+                setMinutes(breakTime)
+                setSeconds(0)
             }else {
                 setExecuting('session')
-                setTimer(`${sessionTime}:00`)
+                setMinutes(sessionTime)
+                setSeconds(0)
             }
-        }else if(seconds as number > 0) {
-            console.log("seconds greater",seconds)
+        }
+        else if(seconds as number > 0) {
             setTimeout(() => {
                 setSeconds((prev) => {
-                    let test = prev as number
-                    return test -= 1 
+                    let intSeconds = prev as number
+                    return intSeconds -= 1 
                 })
             },1000)
         }else if(seconds === 0 && minutes !== 0) {
-            console.log("seconds zero")
+            //problem here, once timer gets to zero this fires twice
+            //results minutes being decremented an extra time
             setTimeout(() => {
                 setMinutes((prev) => {
                     return prev -= 1
@@ -75,7 +72,6 @@ const Counter = (props:CounterProps) => {
     },[seconds,minutes])
 
     
-
     return (
         <div className="counter-container">
             <div className="counter">
@@ -97,3 +93,15 @@ const Counter = (props:CounterProps) => {
 }
 
 export default Counter
+
+
+
+    // useEffect(() => {
+    //    if(executing === 'session') {
+    //         setMinutes(sessionTime)
+    //         setSeconds(0)
+    //     }else if(executing === 'break') {
+    //         setMinutes(breakTime)
+    //         setSeconds(0)
+    //     }
+    // },[executing])
