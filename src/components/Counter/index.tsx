@@ -13,15 +13,32 @@ const Counter = (props:CounterProps) => {
 
     const [ minutes, setMinutes ] = useState(sessionTime)
     const [ seconds, setSeconds ] = useState<string | number>(`00`)
-    const [executing,setExecuting] = useState('')
+    const [ executing, setExecuting ] = useState('')
+    // const [ timer, setTimer] = useState(`${sessionTime}:00`)
+    const [ timer, setTimer] = useState(`${minutes}:${seconds}`)
 
-    const [ timer, setTimer] = useState(`${sessionTime}:00`)
 
     const handleClick = () => {
         const intSeconds = parseInt(seconds as string) 
         setSeconds(intSeconds)
         setExecuting('session')
     }
+
+    useEffect(() => {
+        if(seconds as number >= 10 || executing === '') {
+            setTimer(`${minutes}:${seconds}`)
+        }
+        else {
+            setTimer(`${minutes}:0${seconds}`)
+        }
+        // if(executing === '' || 
+        // (seconds as number >= 10 && executing !== '')) {
+        //     setTimer(`${minutes}:${seconds}`)
+        // }
+        // else if(seconds as number < 10 && executing !== '') {
+        //     setTimer(`${minutes}:0${seconds}`)
+        // }
+    },[seconds,minutes])
 
     useEffect(() => {
         if(executing === '') return
@@ -58,19 +75,6 @@ const Counter = (props:CounterProps) => {
     useEffect(() => {
         setMinutes(sessionTime)
     },[sessionTime])
-
-    useEffect(() => {
-        if(executing === '' || 
-        (seconds as number >= 10 && executing !== '')) {
-            setTimer(`${minutes}:${seconds}`)
-        }
-        // else if(seconds as number >= 10 && executing !== '') {
-        //     setTimer(`${minutes}:${seconds}`)
-        // }
-        else if(seconds as number < 10 && executing !== '') {
-            setTimer(`${minutes}:0${seconds}`)
-        }
-    },[seconds,minutes])
 
     
     return (
