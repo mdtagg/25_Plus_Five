@@ -13,62 +13,89 @@ const Counter = (props:CounterProps) => {
 
     const [ minutes, setMinutes ] = useState(sessionTime)
     const [ seconds, setSeconds ] = useState<string | number>(`00`)
-    const [ executing, setExecuting ] = useState('')
-    // const [ timer, setTimer] = useState(`${sessionTime}:00`)
+    const [ executing, setExecuting ] = useState<string | null>(null)
+    const [ pause, setPause ] = useState(false)
     const [ timer, setTimer] = useState(`${minutes}:${seconds}`)
 
+    // console.log({executing,pause,timer,minutes,seconds})
 
-    const handleClick = () => {
-        const intSeconds = parseInt(seconds as string) 
-        setSeconds(intSeconds)
-        setExecuting('session')
+    const handlePlay = () => { 
+        if(!pause) {
+            const intSeconds = parseInt(seconds as string)
+            setExecuting('session')
+            setSeconds(intSeconds)
+        }else {
+            setPause(false)
+        }
+    }
+
+    const handlePause = () => {
+        setPause(true)
+    }
+
+    const decrementMinutes = () => {
+        setTimeout(() => {
+            setMinutes((prev) => {
+                return prev -= 1
+            })
+            setSeconds(59)
+        },1000)
+    }
+
+    const decrementSeconds = () => {
+        setTimeout(() => {
+            setSeconds((prev) => {
+                return prev as number - 1
+            })
+        },1000)
+    }
+
+    const changeSession = (type:string,minutes:number) => {
+        setExecuting(type)
+        setMinutes(minutes)
     }
 
     useEffect(() => {
-        if(seconds as number >= 10 || executing === '') {
+        console.log({seconds})
+        if(pause) return
+        if(seconds as number >= 10 || executing === null) {
             setTimer(`${minutes}:${seconds}`)
         }
         else {
             setTimer(`${minutes}:0${seconds}`)
         }
-        // if(executing === '' || 
-        // (seconds as number >= 10 && executing !== '')) {
-        //     setTimer(`${minutes}:${seconds}`)
-        // }
-        // else if(seconds as number < 10 && executing !== '') {
-        //     setTimer(`${minutes}:0${seconds}`)
-        // }
-    },[seconds,minutes])
+    },[seconds])
 
     useEffect(() => {
-        if(executing === '') return
-        if(seconds === 0 && minutes === 0) {
-            if(executing === 'session') {
-                setExecuting('break')
-                setMinutes(breakTime)
-                setSeconds(0)
-            }else {
-                setExecuting('session')
-                setMinutes(sessionTime)
-                setSeconds(0)
-            }
+        if(executing === null || pause) return
+        if(seconds === 0 && minutes !== 0) {
+            decrementMinutes()
+            // setTimeout(() => {
+            //     setMinutes((prev) => {
+            //         return prev -= 1
+            //     })
+            //     setSeconds(59)
+            // },1000)
         }
         else if(seconds as number > 0) {
-            setTimeout(() => {
-                setSeconds((prev) => {
-                    let intSeconds = prev as number
-                    return intSeconds -= 1 
-                })
-            },1000)
-        }else if(seconds === 0 && minutes !== 0) {
-            //problem here, once timer gets to zero this fires twice
-            //results minutes being decremented an extra time
-            setTimeout(() => {
-                setMinutes((prev) => {
-                    return prev -= 1
-                })
-                setSeconds(59)
-            },1000)
+            decrementSeconds()
+            // setTimeout(() => {
+            //     setSeconds((prev) => {
+            //         return prev as number - 1
+            //     })
+            // },1000)
+        }
+        else if(seconds === 0 && minutes === 0) {
+            if(executing === 'session') {
+                // setExecuting('break')
+                // setMinutes(breakTime)
+                changeSession('break',breakTime)
+            }else {
+                // setExecuting('session')
+                // setMinutes(sessionTime)
+                changeSession('session',sessionTime)
+            }
+            setSeconds(0)
         }
     },[timer,executing])
 
@@ -76,7 +103,18 @@ const Counter = (props:CounterProps) => {
         setMinutes(sessionTime)
     },[sessionTime])
 
-    
+    useEffect(() => {
+        if(pause || executing === null) return 
+        decrementSeconds()
+        // if(pause) return 
+        // setTimeout(() => {
+            // setSeconds((prev) => {
+            //     return prev as number - 1
+            // })
+            // setSeconds(seconds)
+        // },1000)
+    },[pause])
+
     return (
         <div 
             className="counter-container"
@@ -92,12 +130,13 @@ const Counter = (props:CounterProps) => {
             >
                 <button 
                     className="pause"
+                    onClick={handlePause}
                 >
                     Pause
                 </button>
                 <button 
                     className="play"
-                    onClick={handleClick}
+                    onClick={handlePlay}
                 >
                     Play
                 </button>

@@ -5,8 +5,8 @@ import Counter from '../components/Counter'
 
 function App() {
 
-  const [breakTime, setBreakTime] = useState(5)
-  const [sessionTime,setSessionTime] = useState(25)
+  const [breakTime, setBreakTime] = useState(1)
+  const [sessionTime,setSessionTime] = useState(1)
 
   return (
     <>
