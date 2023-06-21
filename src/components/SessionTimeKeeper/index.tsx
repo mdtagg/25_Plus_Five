@@ -1,7 +1,5 @@
 import "./index.css"
 import { Icon } from "@iconify/react"
-// import { setSessionType } from "../../App"
-// import { SessionType } from "../../App"
 
 interface SessionTimeKeeperProps {
     type:string
@@ -28,14 +26,26 @@ const SessionTimeKeeper = (props:SessionTimeKeeperProps) => {
     }
 
     return (
-        <div className="session-container">
-            <div className="title">{type}</div>
-            <div className="keeper-controls">
+        <div 
+            className="session-container"
+        >
+            <div 
+                className="title"
+            >
+                {type}
+            </div>
+            <div 
+                className="keeper-controls"
+            >
                 <Icon 
-                    className="test"
+                    className="icon"
                     icon="ph:arrow-up-bold" 
                     onClick={handleIncrement}/>
-                <div className="session-amount">{session}</div>
+                <div 
+                    className="session-amount"
+                >
+                    {session}
+                </div>
                 <Icon 
                     className="test"
                     icon="ph:arrow-down-bold"

@@ -5,16 +5,16 @@ import { useEffect } from "react"
 interface CounterProps {
     breakTime:number
     sessionTime:number
-    executing:string
-    setExecuting:React.Dispatch<React.SetStateAction<string>>
 }
 
 const Counter = (props:CounterProps) => {
 
-    const { breakTime, sessionTime, executing, setExecuting } = props
+    const { breakTime, sessionTime } = props
 
     const [ minutes, setMinutes ] = useState(sessionTime)
     const [ seconds, setSeconds ] = useState<string | number>(`00`)
+    const [executing,setExecuting] = useState('')
+
     const [ timer, setTimer] = useState(`${sessionTime}:00`)
 
     const handleClick = () => {
@@ -60,12 +60,13 @@ const Counter = (props:CounterProps) => {
     },[sessionTime])
 
     useEffect(() => {
-        if(executing === '') {
+        if(executing === '' || 
+        (seconds as number >= 10 && executing !== '')) {
             setTimer(`${minutes}:${seconds}`)
         }
-        else if(seconds as number >= 10 && executing !== '') {
-            setTimer(`${minutes}:${seconds}`)
-        }
+        // else if(seconds as number >= 10 && executing !== '') {
+        //     setTimer(`${minutes}:${seconds}`)
+        // }
         else if(seconds as number < 10 && executing !== '') {
             setTimer(`${minutes}:0${seconds}`)
         }
@@ -73,20 +74,34 @@ const Counter = (props:CounterProps) => {
 
     
     return (
-        <div className="counter-container">
-            <div className="counter">
+        <div 
+            className="counter-container"
+        >
+            <div 
+                className="counter"
+            >
                 <p>Session</p>
                 <p>{timer}</p>
             </div>
-            <div className="controls">
-                <button className="pause">Pause</button>
+            <div 
+                className="controls"
+            >
+                <button 
+                    className="pause"
+                >
+                    Pause
+                </button>
                 <button 
                     className="play"
                     onClick={handleClick}
                 >
                     Play
                 </button>
-                <button className="reset">Reset</button>
+                <button 
+                    className="reset"
+                >
+                    Reset
+                </button>
             </div>
         </div>
     )
