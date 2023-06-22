@@ -14,13 +14,13 @@ const Counter = (props:CounterProps) => {
     const [ minutes, setMinutes ] = useState(sessionTime)
     const [ seconds, setSeconds ] = useState<string | number>(`00`)
     const [ executing, setExecuting ] = useState<string | null>(null)
-    const [ pause, setPause ] = useState<undefined | number>(undefined)
+    const [ timeoutId, setTimeoutId ] = useState<undefined | number>(undefined)
     const [ timer, setTimer] = useState(`${minutes}:${seconds}`)
 
     // console.log({executing,pause,timer,minutes,seconds})
 
     const handlePlay = () => { 
-        if(!pause) {
+        if(!timeoutId) {
             const intSeconds = parseInt(seconds as string)
             setExecuting('session')
             setSeconds(intSeconds)
@@ -30,7 +30,7 @@ const Counter = (props:CounterProps) => {
     }
 
     const handlePause = () => {
-        clearTimeout(pause)
+        clearTimeout(timeoutId)
     }
 
     const decrementMinutes = () => {
@@ -57,9 +57,16 @@ const Counter = (props:CounterProps) => {
         setMinutes(minutes)
     }
 
+    const handleReset = () => {
+        clearTimeout(timeoutId)
+        setMinutes(sessionTime)
+        setSeconds(`00`)
+        setTimeoutId(undefined)
+        setExecuting(null)
+        setTimer(`${minutes}:${seconds}`)
+    }
+
     useEffect(() => {
-        console.log({seconds})
-        // if(pause) return
         if(seconds as number >= 10 || executing === null) {
             setTimer(`${minutes}:${seconds}`)
         }
@@ -74,7 +81,7 @@ const Counter = (props:CounterProps) => {
             decrementMinutes()
         }
         else if(seconds as number > 0) {
-            setPause(decrementSeconds())
+            setTimeoutId(decrementSeconds())
         }
         else if(seconds === 0 && minutes === 0) {
             if(executing === 'session') {
@@ -88,19 +95,8 @@ const Counter = (props:CounterProps) => {
 
     useEffect(() => {
         setMinutes(sessionTime)
+        setTimer(`${sessionTime}:00`)
     },[sessionTime])
-
-    useEffect(() => {
-        if(pause || executing === null) return 
-        // decrementSeconds()
-        // if(pause) return 
-        // setTimeout(() => {
-            // setSeconds((prev) => {
-            //     return prev as number - 1
-            // })
-            // setSeconds(seconds)
-        // },1000)
-    },[pause])
 
     return (
         <div 
@@ -129,6 +125,7 @@ const Counter = (props:CounterProps) => {
                 </button>
                 <button 
                     className="reset"
+                    onClick={handleReset}
                 >
                     Reset
                 </button>
