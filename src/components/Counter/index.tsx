@@ -1,6 +1,6 @@
 import "./index.css"
-import { useState } from "react"
-import { useEffect } from "react"
+import { useState,useEffect,useRef } from "react"
+import soundUrl from '../../assets/mixkit-retro-game-emergency-alarm-1000.wav'
 
 interface CounterProps {
     breakTime:number
@@ -11,14 +11,18 @@ interface CounterProps {
 
 const Counter = (props:CounterProps) => {
 
-    const { breakTime, sessionTime, setSessionTime,setBreakTime } = props
-
+    const { breakTime, sessionTime, setSessionTime,setBreakTime } = props 
     const [ minutes, setMinutes ] = useState(sessionTime)
     const [ seconds, setSeconds ] = useState<string | number>(`00`)
     const [ executing, setExecuting ] = useState<string | null>(null)
     const [ timeoutId, setTimeoutId ] = useState<undefined | number>(undefined)
     const [ timer, setTimer] = useState(`${minutes}:${seconds}`)
+    const [ red, setRed ] = useState(false)
+    const test = red ? 'red' : ''
 
+    const audioRef = useRef<HTMLAudioElement | null>(null)
+    const audioElement = audioRef.current as HTMLAudioElement
+    
     const handlePlay = () => { 
         if(!timeoutId) {
             const intSeconds = parseInt(seconds as string)
@@ -43,12 +47,10 @@ const Counter = (props:CounterProps) => {
     }
 
     const decrementSeconds = () => {
-        
         return setTimeout(() => {
             setSeconds((prev) => {
                 return prev as number - 1
             })
-            
         },1000)
     }
 
@@ -69,8 +71,12 @@ const Counter = (props:CounterProps) => {
     }
 
     useEffect(() => {
+        if(minutes < 1) {
+            setRed(true)
+        }
         if((seconds as number >= 10 && minutes > 10) || executing === null) {
             setTimer(`${minutes}:${seconds}`)
+            setRed(false)
         }
         else if(seconds as number >= 10 && minutes < 10) {
             setTimer(`0${minutes}:${seconds}`)
@@ -92,12 +98,16 @@ const Counter = (props:CounterProps) => {
             setTimeoutId(decrementSeconds())
         }
         else if(seconds === 0 && minutes === 0) {
+            setRed(false)
+            audioElement.play()
+            setTimeout(() => {
+                audioElement.pause()
+            },2000)
             if(executing === 'session') {
                 changeSession('break',breakTime)
             }else {
                 changeSession('session',sessionTime)
             }
-            // setSeconds(0)
         }
     },[timer,executing])
 
@@ -114,11 +124,14 @@ const Counter = (props:CounterProps) => {
         <div 
             className="counter-container"
         >
+            <audio id='beep' src={soundUrl} ref={audioRef}></audio>
             <div 
                 className="counter"
             >
-                <p id='timer-label'>Session</p>
-                <p id='time-left'>
+                <p id='timer-label'>
+                    {executing === 'session' || executing === null ? 'session' : 'break'}
+                </p>
+                <p id='time-left' className={test}>
                     {timer}
                 </p>
             </div>

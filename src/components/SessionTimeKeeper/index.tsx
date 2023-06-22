@@ -24,14 +24,14 @@ const SessionTimeKeeper = (props:SessionTimeKeeperProps) => {
     }
 
     const handleIncrement = () => {
-        if(session === 60) return
+        if(session >= 60) return
         setSession((prev) => {
             return prev += 1
         })
     }
 
     const handleDecrement = () => {
-        if(session === 1) return
+        if(session <= 1) return
         setSession((prev) => {
             return prev -= 1
         })
