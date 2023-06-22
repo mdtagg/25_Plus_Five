@@ -11,6 +11,18 @@ const SessionTimeKeeper = (props:SessionTimeKeeperProps) => {
 
     const { type, setSession, session } = props
 
+    let titleId = 'session-label'
+    let decrementId = 'session-decrement'
+    let incrementId = 'session-increment'
+    let sessionId = 'session-length'
+
+    if(type === 'Break Length') {
+        titleId = 'break-label'
+        decrementId = 'break-decrement'
+        incrementId = 'break-increment'
+        sessionId = 'break-length'
+    }
+
     const handleIncrement = () => {
         if(session === 60) return
         setSession((prev) => {
@@ -30,27 +42,38 @@ const SessionTimeKeeper = (props:SessionTimeKeeperProps) => {
             className="session-container"
         >
             <div 
-                className="title"
+                id={titleId}
             >
                 {type}
             </div>
             <div 
                 className="keeper-controls"
             >
-                <Icon 
-                    className="icon"
-                    icon="ph:arrow-up-bold" 
-                    onClick={handleIncrement}/>
-                <div 
-                    className="session-amount"
+                <button
+                    id={incrementId}
+                    onClick={handleIncrement}
+                >
+                    <Icon 
+                        className="icon"
+                        icon="ph:arrow-up-bold" 
+                    />
+                </button>
+                
+                <p
+                    id={sessionId}
                 >
                     {session}
-                </div>
-                <Icon 
-                    className="test"
-                    icon="ph:arrow-down-bold"
+                </p>
+                <button
+                    id={decrementId}
                     onClick={handleDecrement}
-                />
+                >
+                    <Icon 
+                        className="icon"
+                        icon="ph:arrow-down-bold"
+                    />
+                </button>
+                
             </div>
         </div>
     )

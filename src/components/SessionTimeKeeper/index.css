@@ -9,7 +9,7 @@
     align-items: center;
 }
 
-.session-container .title {
+#break-label, #session-label {
     font-size:1.5rem;
 }
 
@@ -18,11 +18,26 @@
     gap:10px;
 }
 
-.icon {
+svg {
     cursor:pointer;
 }
 
-.session-amount {
+#break-length {
     font-size:1.5rem;
 }
 
+.keeper-controls button {
+    background: transparent;
+    border:0;
+    height:30px;
+    width:60px;
+}
+
+.icon {
+    height:100%;
+    width:100%;
+}
+
+.keeper-controls p {
+    font-size: 1.5rem;
+}

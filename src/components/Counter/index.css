@@ -30,7 +30,7 @@
     cursor:pointer;
 }
 
-.pause {
+#start_stop {
     background: #E9D502;
 }
 
@@ -38,6 +38,6 @@
     background: yellowgreen;
 }
 
-.reset {
+#reset {
     background: red;
 }

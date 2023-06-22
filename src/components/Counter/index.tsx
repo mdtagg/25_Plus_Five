@@ -5,19 +5,19 @@ import { useEffect } from "react"
 interface CounterProps {
     breakTime:number
     sessionTime:number
+    setSessionTime:React.Dispatch<React.SetStateAction<number>>
+    setBreakTime:React.Dispatch<React.SetStateAction<number>>
 }
 
 const Counter = (props:CounterProps) => {
 
-    const { breakTime, sessionTime } = props
+    const { breakTime, sessionTime, setSessionTime,setBreakTime } = props
 
     const [ minutes, setMinutes ] = useState(sessionTime)
     const [ seconds, setSeconds ] = useState<string | number>(`00`)
     const [ executing, setExecuting ] = useState<string | null>(null)
     const [ timeoutId, setTimeoutId ] = useState<undefined | number>(undefined)
     const [ timer, setTimer] = useState(`${minutes}:${seconds}`)
-
-    // console.log({executing,pause,timer,minutes,seconds})
 
     const handlePlay = () => { 
         if(!timeoutId) {
@@ -59,16 +59,24 @@ const Counter = (props:CounterProps) => {
 
     const handleReset = () => {
         clearTimeout(timeoutId)
-        setMinutes(sessionTime)
+        setSessionTime(25)
+        setBreakTime(5)
+        setMinutes(25)
         setSeconds(`00`)
         setTimeoutId(undefined)
         setExecuting(null)
-        setTimer(`${minutes}:${seconds}`)
+        setTimer(`25:00`)
     }
 
     useEffect(() => {
-        if(seconds as number >= 10 || executing === null) {
+        if((seconds as number >= 10 && minutes > 10) || executing === null) {
             setTimer(`${minutes}:${seconds}`)
+        }
+        else if(seconds as number >= 10 && minutes < 10) {
+            setTimer(`0${minutes}:${seconds}`)
+        }
+        else if(seconds as number < 10 && minutes < 10) {
+            setTimer(`0${minutes}:0${seconds}`)
         }
         else {
             setTimer(`${minutes}:0${seconds}`)
@@ -89,13 +97,17 @@ const Counter = (props:CounterProps) => {
             }else {
                 changeSession('session',sessionTime)
             }
-            setSeconds(0)
+            // setSeconds(0)
         }
     },[timer,executing])
 
     useEffect(() => {
         setMinutes(sessionTime)
-        setTimer(`${sessionTime}:00`)
+        if(sessionTime < 10) {
+            setTimer(`0${sessionTime}:00`)
+        }else {
+            setTimer(`${sessionTime}:00`)
+        }
     },[sessionTime])
 
     return (
@@ -105,14 +117,16 @@ const Counter = (props:CounterProps) => {
             <div 
                 className="counter"
             >
-                <p>Session</p>
-                <p>{timer}</p>
+                <p id='timer-label'>Session</p>
+                <p id='time-left'>
+                    {timer}
+                </p>
             </div>
             <div 
                 className="controls"
             >
                 <button 
-                    className="pause"
+                    id="start_stop"
                     onClick={handlePause}
                 >
                     Pause
@@ -124,7 +138,7 @@ const Counter = (props:CounterProps) => {
                     Play
                 </button>
                 <button 
-                    className="reset"
+                    id="reset"
                     onClick={handleReset}
                 >
                     Reset
@@ -135,15 +149,3 @@ const Counter = (props:CounterProps) => {
 }
 
 export default Counter
-
-
-
-    // useEffect(() => {
-    //    if(executing === 'session') {
-    //         setMinutes(sessionTime)
-    //         setSeconds(0)
-    //     }else if(executing === 'break') {
-    //         setMinutes(breakTime)
-    //         setSeconds(0)
-    //     }
-    // },[executing])
