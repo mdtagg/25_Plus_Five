@@ -5,11 +5,12 @@ interface SessionTimeKeeperProps {
     type:string
     session:number
     setSession:React.Dispatch<React.SetStateAction<number>>
+    executing:string | null
 }
 
 const SessionTimeKeeper = (props:SessionTimeKeeperProps) => {
 
-    const { type, setSession, session } = props
+    const { type, setSession, session, executing } = props
 
     let titleId = 'session-label'
     let decrementId = 'session-decrement'
@@ -24,14 +25,14 @@ const SessionTimeKeeper = (props:SessionTimeKeeperProps) => {
     }
 
     const handleIncrement = () => {
-        if(session >= 60) return
+        if(session >= 60 || executing) return
         setSession((prev) => {
             return prev += 1
         })
     }
 
     const handleDecrement = () => {
-        if(session <= 1) return
+        if(session <= 1 || executing) return
         setSession((prev) => {
             return prev -= 1
         })

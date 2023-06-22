@@ -7,6 +7,7 @@ function App() {
 
   const [ breakTime, setBreakTime ] = useState(5)
   const [ sessionTime, setSessionTime ] = useState(25)
+  const [ executing, setExecuting ] = useState<string | null>(null)
 
   return (
     <>
@@ -18,17 +19,21 @@ function App() {
           type="Break Length"
           session={breakTime}
           setSession={setBreakTime}
+          executing={executing}
         />
         <SessionTimeKeeper
           type="Session Length"
           session={sessionTime}
           setSession={setSessionTime}
+          executing={executing}
         />
         <Counter
           breakTime={breakTime}
           sessionTime={sessionTime}
           setSessionTime={setSessionTime}
           setBreakTime={setBreakTime}
+          executing={executing}
+          setExecuting={setExecuting}
         />
       </main>
     </>

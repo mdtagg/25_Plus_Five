@@ -7,22 +7,25 @@ interface CounterProps {
     sessionTime:number
     setSessionTime:React.Dispatch<React.SetStateAction<number>>
     setBreakTime:React.Dispatch<React.SetStateAction<number>>
+    executing:string | null
+    setExecuting:React.Dispatch<React.SetStateAction<string | null>>
 }
 
 const Counter = (props:CounterProps) => {
 
-    const { breakTime, sessionTime, setSessionTime,setBreakTime } = props 
+    const { breakTime, sessionTime, setSessionTime,setBreakTime, executing, setExecuting } = props 
     const [ minutes, setMinutes ] = useState(sessionTime)
     const [ seconds, setSeconds ] = useState<string | number>(`00`)
-    const [ executing, setExecuting ] = useState<string | null>(null)
+    // const [ executing, setExecuting ] = useState<string | null>(null)
     const [ timeoutId, setTimeoutId ] = useState<undefined | number>(undefined)
     const [ timer, setTimer] = useState(`${minutes}:${seconds}`)
     const [ red, setRed ] = useState(false)
-    const test = red ? 'red' : ''
 
     const audioRef = useRef<HTMLAudioElement | null>(null)
     const audioElement = audioRef.current as HTMLAudioElement
     
+    const test = red ? 'red' : ''
+
     const handlePlay = () => { 
         if(!timeoutId) {
             const intSeconds = parseInt(seconds as string)
@@ -60,6 +63,7 @@ const Counter = (props:CounterProps) => {
     }
 
     const handleReset = () => {
+        audioElement.pause()
         clearTimeout(timeoutId)
         setSessionTime(25)
         setBreakTime(5)
