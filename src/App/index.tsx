@@ -18,14 +18,14 @@ function App() {
         </div>
         <SessionTimeKeeper
           type="Break Length"
-          session={breakTime}
-          setSession={setBreakTime}
+          sessionTime={breakTime}
+          setSessionTime={setBreakTime}
           executing={executing}
         />
         <SessionTimeKeeper
           type="Session Length"
-          session={sessionTime}
-          setSession={setSessionTime}
+          sessionTime={sessionTime}
+          setSessionTime={setSessionTime}
           executing={executing}
         />
         <Timer

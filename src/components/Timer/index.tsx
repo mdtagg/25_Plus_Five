@@ -13,81 +13,77 @@ interface TimerProps {
 
 const Timer = (props:TimerProps) => {
 
-    const { sessionTime, breakTime, setSessionTime, setBreakTime } = props
+    const { sessionTime,setSessionTime, breakTime, setBreakTime } = props
 
-    const [ minutes, setMinutes ] = useState(sessionTime)
-    const [ seconds, setSeconds ] = useState(0)
+    const [ start, setStart ] = useState(false)
     const [ timer, setTimer ] = useState(`25:00`)
     const [ executing, setExecuting ] = useState<string | undefined>(undefined)
     const [ timerId,setTimerId ] = useState<number | undefined>(undefined)
 
-    console.log({minutes,seconds,timer,executing})
+    // console.log({minutes,seconds,timer,executing})
 
     const handlePlay = () => {
-        setMinutes((prev) => {
-            return prev -= 1
-        })
-        setSeconds(59)
-        setExecuting('Session')
-    }
-
-    const handleReset = () => {
-        clearTimeout(timerId)
-        setSessionTime(25)
-        setBreakTime(5)
-        setMinutes(sessionTime)
-        setSeconds(0)
-        setTimer(`25:00`)
-        setExecuting(undefined)
-    }
-
-    const parseTimer = () => {
-        return setTimeout(() => {
-            if(seconds === 0 && minutes === 0) {
-                setTimer(`00:00`)
-                setTimerId(switchSession())
-                return
-            }
-            if(seconds >= 10 && minutes >= 10) {
-                setTimer(`${minutes}:${seconds}`)
-            }else if(seconds >= 10 && minutes < 10) {
-                setTimer(`0${minutes}:${seconds}`)
-            }else if(seconds < 10 && minutes >= 10) {
-                setTimer(`${minutes}:0${seconds}`)
-            }else {
-                setTimer(`0${minutes}:0${seconds}`)
-            }
-            setSeconds((prev) => {
-                return prev -= 1
-            })
-        },1000)
-    }
-    
-    const switchSession = () => {
-        return setTimeout(() => {
-            switch(executing) {
-                case 'Session':
-                    setExecuting('Break')
-                    setSeconds(59)
-                    setMinutes(breakTime - 1)
-                    setTimer(`${breakTime}:00`)
-                    break
-                case 'Break':
-                    setExecuting('Session')
-                    setSeconds(59)
-                    setMinutes(sessionTime - 1)
-                    setTimer(`${sessionTime}:00`)
-                    break
-                default:
-                    return
-            }
-        },1000)
+        if(!executing) {
+            setTimerId(parseTimer())
+            setExecuting('Session')
+            setStart(true)
+        }
+        else if(start) {
+            setStart(false)
+            clearTimeout(timerId)
+        }
+        else {
+            setStart(true)
+            setTimerId(parseTimer())
+        }
     }
 
     useEffect(() => {
         if(!executing) return
-        setTimerId(parseTimer)
-    },[seconds])
+        setTimerId(parseTimer())
+    },[timer])
+
+    const parseTimer = () => {
+        return setTimeout(() => {
+            const [ minutes, seconds ] = timer.split(':').map(item => {return parseInt(item)})
+            if(seconds === 0 && minutes === 0) {
+                if(executing === 'Session') {
+                    setExecuting('Break')
+                    setTimer(`${breakTime}:00`)
+                }else {
+                    setExecuting('Session')
+                    setTimer(`${sessionTime}:00`)
+                }
+            }
+            else if(minutes > 10 && seconds === 0) {
+                setTimer(`${minutes - 1}:59`)
+            }
+            else if(minutes <= 10 && seconds === 0) {
+                setTimer(`0${minutes - 1}:59`)
+            }
+            else if(minutes >= 10 && seconds >= 10) {
+                setTimer(`${minutes}:${seconds - 1}`)
+            }
+            else if(minutes < 10 && seconds > 10) {
+                setTimer(`0${minutes}:${seconds - 1}`)
+            }
+            else if(minutes > 10 && seconds < 10) {
+                setTimer(`${minutes}:0${seconds - 1}`)
+            }
+            else if(minutes < 10 && seconds <= 10) {
+                setTimer(`0${minutes}:0${seconds - 1}`)
+            }
+        },1000)
+    }
+
+    const handleReset = () => {
+        setStart(false)
+        clearTimeout(timerId)
+        setSessionTime(25)
+        setBreakTime(5)
+        setTimer(`25:00`)
+        setExecuting(undefined)
+    }
 
     useEffect(() => {
         if(sessionTime >= 10) {
@@ -95,7 +91,6 @@ const Timer = (props:TimerProps) => {
         }else {
             setTimer(`0${sessionTime}:00`)
         }
-        setMinutes(sessionTime)
     },[sessionTime])
 
     return (
@@ -119,7 +114,9 @@ const Timer = (props:TimerProps) => {
                     <Icon className="test" icon="bi:play-fill" />
                 </button>
 
-                <button id="reset" onClick={handleReset}>
+                <button id="reset" 
+                onClick={handleReset}
+                >
                     <Icon icon="carbon:reset"/>
                 </button>
 
@@ -129,3 +126,62 @@ const Timer = (props:TimerProps) => {
 }
 
 export default Timer
+
+// else {
+//     let newMinutes 
+//     let newSeconds 
+
+//     if(minutes > 10) {
+//         newMinutes = `${minutes}`
+//     }else {
+//         newMinutes = `0${minutes}`
+//     }
+//     if(seconds > 10) {
+//         newSeconds = `${seconds}`
+//     }else {
+//         newSeconds = `0${seconds}`
+//     }
+//     console.log({newMinutes,newSeconds})
+//     setTimer(`${newMinutes}:${newSeconds}`)
+// }
+
+// setMinutes((prev) => {
+        //     return prev -= 1
+        // })
+        // setSeconds(59)
+        // setExecuting('Session')
+        // setPlay(true)
+
+    // const switchSession = () => {
+    //     return setTimeout(() => {
+    //         switch(executing) {
+    //             case 'Session':
+    //                 setExecuting('Break')
+    //                 setSeconds(59)
+    //                 setMinutes(breakTime - 1)
+    //                 setTimer(`${breakTime}:00`)
+    //                 break
+    //             case 'Break':
+    //                 setExecuting('Session')
+    //                 setSeconds(59)
+    //                 setMinutes(sessionTime - 1)
+    //                 setTimer(`${sessionTime}:00`)
+    //                 break
+    //             default:
+    //                 return
+    //         }
+    //     },1000)
+    // }
+
+    // useEffect(() => {
+    //     if(!executing) return
+    //     const [ minutes, ] = timer.split(':').map(item => {return parseInt(item)})
+        
+    //     // setMinutes(minutes)
+    //     // setSeconds(seconds)
+    // },[play])
+
+    // useEffect(() => {
+    //     if(!executing) return
+    //     setTimerId(parseTimer)
+    // },[seconds])

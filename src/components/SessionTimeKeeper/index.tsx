@@ -3,14 +3,14 @@ import { Icon } from "@iconify/react"
 
 interface SessionTimeKeeperProps {
     type:string
-    session:number
-    setSession:React.Dispatch<React.SetStateAction<number>>
+    sessionTime:number
+    setSessionTime:React.Dispatch<React.SetStateAction<number>>
     executing:string | null
 }
 
 const SessionTimeKeeper = (props:SessionTimeKeeperProps) => {
 
-    const { type, setSession, session, executing } = props
+    const { type, setSessionTime, sessionTime, executing } = props
 
     let titleId = 'session-label'
     let decrementId = 'session-decrement'
@@ -25,15 +25,15 @@ const SessionTimeKeeper = (props:SessionTimeKeeperProps) => {
     }
 
     const handleIncrement = () => {
-        if(session >= 60 || executing) return
-        setSession((prev) => {
+        if(sessionTime >= 60 || executing) return
+        setSessionTime((prev) => {
             return prev += 1
         })
     }
 
     const handleDecrement = () => {
-        if(session <= 1 || executing) return
-        setSession((prev) => {
+        if(sessionTime <= 1 || executing) return
+        setSessionTime((prev) => {
             return prev -= 1
         })
     }
@@ -53,7 +53,7 @@ const SessionTimeKeeper = (props:SessionTimeKeeperProps) => {
                 </button>
                 
                 <p id={sessionId}>
-                    {session}
+                    {sessionTime}
                 </p>
 
                 <button
