@@ -42,7 +42,7 @@ const SessionTimeKeeper = (props:SessionTimeKeeperProps) => {
         <div 
             className="session-container"
         >
-            <div 
+            <div
                 id={titleId}
             >
                 {type}
@@ -65,6 +65,7 @@ const SessionTimeKeeper = (props:SessionTimeKeeperProps) => {
                 >
                     {session}
                 </p>
+
                 <button
                     id={decrementId}
                     onClick={handleDecrement}
@@ -74,7 +75,6 @@ const SessionTimeKeeper = (props:SessionTimeKeeperProps) => {
                         icon="ph:arrow-down-bold"
                     />
                 </button>
-                
             </div>
         </div>
     )

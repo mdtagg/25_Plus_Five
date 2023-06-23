@@ -1,6 +1,7 @@
 import "./index.css"
 import { useState,useEffect,useRef } from "react"
 import soundUrl from '../../assets/mixkit-retro-game-emergency-alarm-1000.wav'
+import { Icon } from "@iconify/react"
 
 interface CounterProps {
     breakTime:number
@@ -14,9 +15,9 @@ interface CounterProps {
 const Counter = (props:CounterProps) => {
 
     const { breakTime, sessionTime, setSessionTime,setBreakTime, executing, setExecuting } = props 
+    const [ playPause, setPlayPause ] = useState(false)
     const [ minutes, setMinutes ] = useState(sessionTime)
     const [ seconds, setSeconds ] = useState<string | number>(`00`)
-    // const [ executing, setExecuting ] = useState<string | null>(null)
     const [ timeoutId, setTimeoutId ] = useState<undefined | number>(undefined)
     const [ timer, setTimer] = useState(`${minutes}:${seconds}`)
     const [ red, setRed ] = useState(false)
@@ -25,6 +26,8 @@ const Counter = (props:CounterProps) => {
     const audioElement = audioRef.current as HTMLAudioElement
     
     const test = red ? 'red' : ''
+
+    console.log({minutes,seconds,timeoutId,timer})
 
     const handlePlay = () => { 
         if(!timeoutId) {
@@ -41,7 +44,7 @@ const Counter = (props:CounterProps) => {
     }
 
     const decrementMinutes = () => {
-        setTimeout(() => {
+        return setTimeout(() => {
             setMinutes((prev) => {
                 return prev -= 1
             })
@@ -63,7 +66,7 @@ const Counter = (props:CounterProps) => {
     }
 
     const handleReset = () => {
-        audioElement.pause()
+        // audioElement.pause()
         clearTimeout(timeoutId)
         setSessionTime(25)
         setBreakTime(5)
@@ -74,7 +77,18 @@ const Counter = (props:CounterProps) => {
         setTimer(`25:00`)
     }
 
+    const handleClick = () => {
+        if(!playPause) {
+            handlePlay()
+            setPlayPause(true)
+        }else {
+            handlePause()
+            setPlayPause(false)
+        }
+    }
+
     useEffect(() => {
+        if(executing === null) return
         if(minutes < 1) {
             setRed(true)
         }
@@ -96,7 +110,7 @@ const Counter = (props:CounterProps) => {
     useEffect(() => {
         if(executing === null) return
         if(seconds === 0 && minutes !== 0) {
-            decrementMinutes()
+            setTimeoutId(decrementMinutes())
         }
         else if(seconds as number > 0) {
             setTimeoutId(decrementSeconds())
@@ -106,7 +120,7 @@ const Counter = (props:CounterProps) => {
             audioElement.play()
             setTimeout(() => {
                 audioElement.pause()
-            },2000)
+            },3000)
             if(executing === 'session') {
                 changeSession('break',breakTime)
             }else {
@@ -125,41 +139,29 @@ const Counter = (props:CounterProps) => {
     },[sessionTime])
 
     return (
-        <div 
-            className="counter-container"
-        >
+        <div className="counter-container">
             <audio id='beep' src={soundUrl} ref={audioRef}></audio>
-            <div 
-                className="counter"
-            >
+            <div className="counter">
+
                 <p id='timer-label'>
                     {executing === 'session' || executing === null ? 'session' : 'break'}
                 </p>
+
                 <p id='time-left' className={test}>
                     {timer}
                 </p>
+
             </div>
-            <div 
-                className="controls"
-            >
-                <button 
-                    id="start_stop"
-                    onClick={handlePause}
-                >
-                    Pause
+            <div className="controls">
+
+                <button id='start_stop' onClick={handleClick}>
+                    <Icon className="test" icon="bi:play-fill" />
                 </button>
-                <button 
-                    className="play"
-                    onClick={handlePlay}
-                >
-                    Play
+
+                <button id="reset" onClick={handleReset}>
+                    <Icon icon="carbon:reset"/>
                 </button>
-                <button 
-                    id="reset"
-                    onClick={handleReset}
-                >
-                    Reset
-                </button>
+
             </div>
         </div>
     )

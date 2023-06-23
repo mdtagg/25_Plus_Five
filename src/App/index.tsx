@@ -2,6 +2,7 @@ import { useState } from 'react'
 import './index.css'
 import SessionTimeKeeper from '../components/SessionTimeKeeper'
 import Counter from '../components/Counter'
+import Timer from '../components/Timer'
 
 function App() {
 
@@ -27,14 +28,21 @@ function App() {
           setSession={setSessionTime}
           executing={executing}
         />
-        <Counter
+        <Timer
+          breakTime={breakTime}
+          setBreakTime={setBreakTime}
+          sessionTime={sessionTime}
+          executing={executing}
+          setSessionTime={setSessionTime}
+        />
+        {/* <Counter
           breakTime={breakTime}
           sessionTime={sessionTime}
           setSessionTime={setSessionTime}
           setBreakTime={setBreakTime}
           executing={executing}
           setExecuting={setExecuting}
-        />
+        /> */}
       </main>
     </>
   )
