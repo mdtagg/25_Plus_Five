@@ -28,7 +28,7 @@ const Timer = (props:TimerProps) => {
             return prev -= 1
         })
         setSeconds(59)
-        setExecuting('session')
+        setExecuting('Session')
     }
 
     const handleReset = () => {
@@ -66,14 +66,14 @@ const Timer = (props:TimerProps) => {
     const switchSession = () => {
         return setTimeout(() => {
             switch(executing) {
-                case 'session':
-                    setExecuting('break')
+                case 'Session':
+                    setExecuting('Break')
                     setSeconds(59)
                     setMinutes(breakTime - 1)
                     setTimer(`${breakTime}:00`)
                     break
-                case 'break':
-                    setExecuting('session')
+                case 'Break':
+                    setExecuting('Session')
                     setSeconds(59)
                     setMinutes(sessionTime - 1)
                     setTimer(`${sessionTime}:00`)
@@ -104,7 +104,8 @@ const Timer = (props:TimerProps) => {
             <div className="counter">
 
                 <p id='timer-label'>
-                    Session
+                    {!executing || executing === 'Session' ? 
+                    'Session' : 'Break'}
                 </p>
 
                 <p id='time-left'>

@@ -39,30 +39,20 @@ const SessionTimeKeeper = (props:SessionTimeKeeperProps) => {
     }
 
     return (
-        <div 
-            className="session-container"
-        >
-            <div
-                id={titleId}
-            >
+        <div className="session-container">
+            <div id={titleId}>
                 {type}
             </div>
-            <div 
-                className="keeper-controls"
-            >
-                <button
-                    id={incrementId}
+            <div className="keeper-controls">
+
+                <button 
+                    id={incrementId} 
                     onClick={handleIncrement}
                 >
-                    <Icon 
-                        className="icon"
-                        icon="ph:arrow-up-bold" 
-                    />
+                    <Icon className="icon" icon="ph:arrow-up-bold" />
                 </button>
                 
-                <p
-                    id={sessionId}
-                >
+                <p id={sessionId}>
                     {session}
                 </p>
 
@@ -70,10 +60,7 @@ const SessionTimeKeeper = (props:SessionTimeKeeperProps) => {
                     id={decrementId}
                     onClick={handleDecrement}
                 >
-                    <Icon 
-                        className="icon"
-                        icon="ph:arrow-down-bold"
-                    />
+                    <Icon className="icon" icon="ph:arrow-down-bold" />
                 </button>
             </div>
         </div>
