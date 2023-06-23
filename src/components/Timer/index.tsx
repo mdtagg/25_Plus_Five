@@ -8,19 +8,19 @@ interface TimerProps {
     setBreakTime:React.Dispatch<React.SetStateAction<number>>
     sessionTime:number
     setSessionTime:React.Dispatch<React.SetStateAction<number>>
-    executing:string | null 
+    executing:string | undefined
+    setExecuting:React.Dispatch<React.SetStateAction<string | undefined>>
 }
 
 const Timer = (props:TimerProps) => {
 
-    const { sessionTime,setSessionTime, breakTime, setBreakTime } = props
+    const { sessionTime,setSessionTime, breakTime, setBreakTime,executing,setExecuting } = props
 
     const [ start, setStart ] = useState(false)
     const [ timer, setTimer ] = useState(`25:00`)
-    const [ executing, setExecuting ] = useState<string | undefined>(undefined)
     const [ timerId,setTimerId ] = useState<number | undefined>(undefined)
-
-    // console.log({minutes,seconds,timer,executing})
+    const audioRef = useRef<null | HTMLAudioElement>(null)
+    const [ audioElement, setAudioElement ] = useState(audioRef)
 
     const handlePlay = () => {
         if(!executing) {
@@ -47,12 +47,24 @@ const Timer = (props:TimerProps) => {
         return setTimeout(() => {
             const [ minutes, seconds ] = timer.split(':').map(item => {return parseInt(item)})
             if(seconds === 0 && minutes === 0) {
+                setTimeout(() => {
+                    const test = audioElement.current as HTMLAudioElement
+                    test.play()
+                },3000)
                 if(executing === 'Session') {
                     setExecuting('Break')
-                    setTimer(`${breakTime}:00`)
+                    if(breakTime >= 10) {
+                        setTimer(`${breakTime}:00`)
+                    }else {
+                        setTimer(`0${breakTime}:00`)
+                    }
                 }else {
                     setExecuting('Session')
-                    setTimer(`${sessionTime}:00`)
+                    if(sessionTime >= 10) {
+                        setTimer(`${sessionTime}:00`)
+                    }else {
+                        setTimer(`0${sessionTime}:00`)
+                    }
                 }
             }
             else if(minutes > 10 && seconds === 0) {
@@ -77,6 +89,7 @@ const Timer = (props:TimerProps) => {
     }
 
     const handleReset = () => {
+        audioElement.current?.pause()
         setStart(false)
         clearTimeout(timerId)
         setSessionTime(25)
@@ -95,7 +108,7 @@ const Timer = (props:TimerProps) => {
 
     return (
         <div className="counter-container">
-            <audio id='beep' src={soundUrl}></audio>
+            <audio id='beep' src={soundUrl} ref={audioRef}></audio>
             <div className="counter">
 
                 <p id='timer-label'>
@@ -126,62 +139,3 @@ const Timer = (props:TimerProps) => {
 }
 
 export default Timer
-
-// else {
-//     let newMinutes 
-//     let newSeconds 
-
-//     if(minutes > 10) {
-//         newMinutes = `${minutes}`
-//     }else {
-//         newMinutes = `0${minutes}`
-//     }
-//     if(seconds > 10) {
-//         newSeconds = `${seconds}`
-//     }else {
-//         newSeconds = `0${seconds}`
-//     }
-//     console.log({newMinutes,newSeconds})
-//     setTimer(`${newMinutes}:${newSeconds}`)
-// }
-
-// setMinutes((prev) => {
-        //     return prev -= 1
-        // })
-        // setSeconds(59)
-        // setExecuting('Session')
-        // setPlay(true)
-
-    // const switchSession = () => {
-    //     return setTimeout(() => {
-    //         switch(executing) {
-    //             case 'Session':
-    //                 setExecuting('Break')
-    //                 setSeconds(59)
-    //                 setMinutes(breakTime - 1)
-    //                 setTimer(`${breakTime}:00`)
-    //                 break
-    //             case 'Break':
-    //                 setExecuting('Session')
-    //                 setSeconds(59)
-    //                 setMinutes(sessionTime - 1)
-    //                 setTimer(`${sessionTime}:00`)
-    //                 break
-    //             default:
-    //                 return
-    //         }
-    //     },1000)
-    // }
-
-    // useEffect(() => {
-    //     if(!executing) return
-    //     const [ minutes, ] = timer.split(':').map(item => {return parseInt(item)})
-        
-    //     // setMinutes(minutes)
-    //     // setSeconds(seconds)
-    // },[play])
-
-    // useEffect(() => {
-    //     if(!executing) return
-    //     setTimerId(parseTimer)
-    // },[seconds])
