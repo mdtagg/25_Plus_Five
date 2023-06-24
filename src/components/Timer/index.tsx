@@ -20,7 +20,6 @@ const Timer = (props:TimerProps) => {
     const [ timer, setTimer ] = useState(`25:00`)
     const [ timerId,setTimerId ] = useState<number | undefined>(undefined)
     const audioRef = useRef<null | HTMLAudioElement>(null)
-    const [ audioElement, setAudioElement ] = useState(audioRef)
 
     const handlePlay = () => {
         if(!executing) {
@@ -38,6 +37,29 @@ const Timer = (props:TimerProps) => {
         }
     }
 
+    const startNewSession = () => {
+
+        setTimeout(() => {
+            const audioElement = audioRef.current as HTMLAudioElement
+            audioElement.play()
+        },3000)
+
+        if(executing === 'Session') {
+            setExecuting('Break')
+            if(breakTime >= 10) {
+                return setTimer(`${breakTime}:00`)
+            }
+            setTimer(`0${breakTime}:00`)
+        }
+        else {
+            setExecuting('Session')
+            if(sessionTime >= 10) {
+                return setTimer(`${sessionTime}:00`)
+            }
+            setTimer(`0${sessionTime}:00`)
+        }
+    }
+
     useEffect(() => {
         if(!executing) return
         setTimerId(parseTimer())
@@ -46,26 +68,9 @@ const Timer = (props:TimerProps) => {
     const parseTimer = () => {
         return setTimeout(() => {
             const [ minutes, seconds ] = timer.split(':').map(item => {return parseInt(item)})
+            
             if(seconds === 0 && minutes === 0) {
-                setTimeout(() => {
-                    const test = audioElement.current as HTMLAudioElement
-                    test.play()
-                },3000)
-                if(executing === 'Session') {
-                    setExecuting('Break')
-                    if(breakTime >= 10) {
-                        setTimer(`${breakTime}:00`)
-                    }else {
-                        setTimer(`0${breakTime}:00`)
-                    }
-                }else {
-                    setExecuting('Session')
-                    if(sessionTime >= 10) {
-                        setTimer(`${sessionTime}:00`)
-                    }else {
-                        setTimer(`0${sessionTime}:00`)
-                    }
-                }
+                return startNewSession()
             }
             else if(minutes > 10 && seconds === 0) {
                 setTimer(`${minutes - 1}:59`)
@@ -89,7 +94,7 @@ const Timer = (props:TimerProps) => {
     }
 
     const handleReset = () => {
-        audioElement.current?.pause()
+        audioRef.current?.pause()
         setStart(false)
         clearTimeout(timerId)
         setSessionTime(25)
@@ -139,3 +144,12 @@ const Timer = (props:TimerProps) => {
 }
 
 export default Timer
+
+   // const changeSession = (sessionType:string,sessionLength:number) => {
+    //     setExecuting(sessionType)
+    //     if(sessionLength >= 10) {
+    //         setTimer(`${sessionLength}:00`)
+    //     }else {
+    //         setTimer(`0${sessionLength}:00`)
+    //     }
+    // }
