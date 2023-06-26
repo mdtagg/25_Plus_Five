@@ -62,28 +62,18 @@ const Timer = (props:TimerProps) => {
 
     const parseTimer = () => {
         return setTimeout(() => {
-            const [ minutes, seconds ] = timer.split(':').map(item => {return parseInt(item)})
+            let [ minutes, seconds ] = timer.split(':').map(item => {return parseInt(item)})
+            let currentTime = minutes * 60 + seconds 
 
             if(seconds === 0 && minutes === 0) {
                 return startNewSession()
             }
-            else if(minutes > 10 && seconds === 0) {
-                setTimer(`${minutes - 1}:59`)
-            }
-            else if(minutes <= 10 && seconds === 0) {
-                setTimer(`0${minutes - 1}:59`)
-            }
-            else if(minutes >= 10 && seconds >= 10) {
-                setTimer(`${minutes}:${seconds - 1}`)
-            }
-            else if(minutes < 10 && seconds > 10) {
-                setTimer(`0${minutes}:${seconds - 1}`)
-            }
-            else if(minutes > 10 && seconds < 10) {
-                setTimer(`${minutes}:0${seconds - 1}`)
-            }
-            else if(minutes < 10 && seconds <= 10) {
-                setTimer(`0${minutes}:0${seconds - 1}`)
+            else {
+                currentTime--
+                minutes = Math.floor(currentTime / 60)
+                seconds = currentTime % 60
+
+                setTimer(`${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`)
             }
         },1000)
     }
@@ -165,3 +155,22 @@ const Timer = (props:TimerProps) => {
 }
 
 export default Timer
+
+// else if(minutes > 10 && seconds === 0) {
+            //     setTimer(`${minutes - 1}:59`)
+            // }
+            // else if(minutes <= 10 && seconds === 0) {
+            //     setTimer(`0${minutes - 1}:59`)
+            // }
+            // else if(minutes >= 10 && seconds >= 10) {
+            //     setTimer(`${minutes}:${seconds - 1}`)
+            // }
+            // else if(minutes < 10 && seconds > 10) {
+            //     setTimer(`0${minutes}:${seconds - 1}`)
+            // }
+            // else if(minutes > 10 && seconds < 10) {
+            //     setTimer(`${minutes}:0${seconds - 1}`)
+            // }
+            // else if(minutes < 10 && seconds <= 10) {
+            //     setTimer(`0${minutes}:0${seconds - 1}`)
+            // }
