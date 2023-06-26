@@ -12,7 +12,7 @@ function App() {
   return (
     <>
       <main>
-        <div className="one">
+        <div className="main-title">
           25 + 5 Clock
         </div>
         <SessionTimeKeeper

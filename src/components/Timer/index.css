@@ -1,11 +1,11 @@
-.counter-container {
+.timer-container {
     grid-column: 1/3;
     display: flex;
     flex-direction:column;
     align-items: center;
 }
 
-.counter {
+.timer {
     height:100%;
     width: 50%;
     border:4px solid #F9DBBB;
@@ -27,11 +27,10 @@
     gap:10px;
 }
 
-.controls button {
-    cursor:pointer;
-}
-
 #start_stop, #reset {
+    display:flex;
+    justify-content: center;
+    align-items: center;
     height:1.5rem;
     width:5rem;
     border:2px solid black;
@@ -39,7 +38,7 @@
 }
 
 .green {
-    background:yellowgreen;
+    background:rgba(81, 211, 81);
 }
 
 .yellow {

@@ -14,7 +14,7 @@ interface TimerProps {
 
 const Timer = (props:TimerProps) => {
 
-    const { sessionTime,setSessionTime, breakTime, setBreakTime,executing,setExecuting } = props
+    const { sessionTime, setSessionTime, breakTime, setBreakTime, executing, setExecuting } = props
 
     const [ start, setStart ] = useState(false)
     const [ timer, setTimer ] = useState(`25:00`)
@@ -123,9 +123,9 @@ const Timer = (props:TimerProps) => {
     },[sessionTime])
 
     return (
-        <div className="counter-container">
+        <div className="timer-container">
             <audio id='beep' src={soundUrl} ref={audioRef}></audio>
-            <div className="counter">
+            <div className="timer">
 
                 <p id='timer-label'>
                     {!executing || executing === 'Session' ? 

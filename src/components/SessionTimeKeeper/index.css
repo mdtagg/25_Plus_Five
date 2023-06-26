@@ -1,9 +1,9 @@
-.session-container {
+.keeper-container {
     display:grid;
     grid-template-rows: 1fr 1fr;
 }
 
-.session-container div {
+.keeper-container div {
     display:flex;
     justify-content: center;
     align-items: center;
@@ -18,12 +18,8 @@
     gap:10px;
 }
 
-svg {
-    cursor:pointer;
-}
-
-#break-length {
-    font-size:1.5rem;
+#break-length, #session-length {
+    font-size:2rem;
 }
 
 .keeper-controls button {

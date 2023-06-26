@@ -34,13 +34,13 @@ const SessionTimeKeeper = (props:SessionTimeKeeperProps) => {
     const handleDecrement = () => {
         if(session <= 1 || executing) return;
         setSession((prev) => {
-            console.log({prev,session,type,executing})
-            return prev -= 1
+            if(prev === 1) return 1
+            return prev - 1
         })
      }
 
     return (
-        <div className="session-container">
+        <div className="keeper-container">
             <div id={titleId}>
                 {type}
             </div>
