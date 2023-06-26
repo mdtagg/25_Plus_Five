@@ -32,14 +32,12 @@ const SessionTimeKeeper = (props:SessionTimeKeeperProps) => {
     }
 
     const handleDecrement = () => {
-        if(session <= 1 || executing) return
+        if(session <= 1 || executing) return;
         setSession((prev) => {
-            console.log({prev,session,type})
-            return prev - 1
+            console.log({prev,session,type,executing})
+            return prev -= 1
         })
      }
-
-    // console.log({session})
 
     return (
         <div className="session-container">

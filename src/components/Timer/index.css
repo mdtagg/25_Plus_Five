@@ -35,8 +35,15 @@
     height:1.5rem;
     width:5rem;
     border:2px solid black;
-    background:yellowgreen;
     border-radius:3px;
+}
+
+.green {
+    background:yellowgreen;
+}
+
+.yellow {
+    background:rgb(255, 213, 0);
 }
 
 #reset {
