@@ -12,17 +12,13 @@ const SessionTimeKeeper = (props:SessionTimeKeeperProps) => {
 
     const { type, setSession, session, executing } = props
 
-    let titleId = 'session-label'
-    let decrementId = 'session-decrement'
-    let incrementId = 'session-increment'
-    let sessionId = 'session-length'
+    const firstWord = type === 'Break Length' ? 'break' : 'session'
 
-    if(type === 'Break Length') {
-        titleId = 'break-label'
-        decrementId = 'break-decrement'
-        incrementId = 'break-increment'
-        sessionId = 'break-length'
-    }
+    const titleId = `${firstWord}-label`
+    const decrementId = `${firstWord}-decrement`
+    const incrementId = `${firstWord}-increment`
+    const sessionId = `${firstWord}-length`
+
 
     const handleIncrement = () => {
         if(session >= 60 || executing) return
